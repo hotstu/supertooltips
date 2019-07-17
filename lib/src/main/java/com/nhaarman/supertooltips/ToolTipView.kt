@@ -165,8 +165,8 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
             AnimatorSet().apply {
                 playTogether(arrayListOf(
                         ObjectAnimator.ofFloat(this@ToolTipView, SCALE_X_COMPAT, 0f, 1f) as Animator,
-                        ObjectAnimator.ofFloat(this@ToolTipView, SCALE_Y_COMPAT, 0f, 1f) as Animator,
-                        ObjectAnimator.ofFloat(this@ToolTipView, ALPHA_COMPAT, 0f, 1f) as Animator
+                        ObjectAnimator.ofFloat(this@ToolTipView, SCALE_Y_COMPAT, 0f, 1f),
+                        ObjectAnimator.ofFloat(this@ToolTipView, ALPHA_COMPAT, 0f, 1f)
                 ).apply {
                     if (animationType == AnimationType.FROM_MASTER_VIEW) {
                         add(ObjectAnimator.ofFloat(this@ToolTipView, TRANSLATION_Y_COMPAT,
@@ -217,7 +217,7 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
         } else {
             AnimatorSet().apply {
                 playTogether(arrayListOf(
-                        ObjectAnimator.ofFloat(this@ToolTipView, SCALE_X_COMPAT, 1f, 0f),
+                        ObjectAnimator.ofFloat(this@ToolTipView, SCALE_X_COMPAT, 1f, 0f) as Animator,
                         ObjectAnimator.ofFloat(this@ToolTipView, SCALE_Y_COMPAT, 1f, 0f),
                         ObjectAnimator.ofFloat(this@ToolTipView, ALPHA_COMPAT, 1f, 0f)
                 ).apply {
@@ -227,7 +227,7 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
                     } else {
                         add(ObjectAnimator.ofFloat(this@ToolTipView, TRANSLATION_Y_COMPAT, y, 0f))
                     }
-                }.toList())
+                })
                 doOnEnd {
                     parent?.run {
                         this as ViewGroup
