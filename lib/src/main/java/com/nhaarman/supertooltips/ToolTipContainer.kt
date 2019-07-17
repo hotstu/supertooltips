@@ -18,16 +18,23 @@ package com.nhaarman.supertooltips
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.view.View.MeasureSpec.UNSPECIFIED
 import android.widget.FrameLayout
 
-@Deprecated("no need any more")
-class ToolTipRelativeLayout : FrameLayout {
+class ToolTipContainer : FrameLayout {
 
-    constructor(context: Context) : super(context) {}
+    constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {}
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        setMeasuredDimension(getDefaultSize(suggestedMinimumWidth, widthMeasureSpec),
+                getDefaultSize(suggestedMinimumHeight, heightMeasureSpec))
+        //now the child is measured no matter what size the parent is
+        measureChildren(MeasureSpec.makeMeasureSpec(0, UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, UNSPECIFIED))
+    }
 
     /**
      * Shows a [ToolTipView] based on given [ToolTip] at the proper

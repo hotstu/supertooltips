@@ -3,11 +3,12 @@ package com.haarman.supertooltips
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import com.nhaarman.supertooltips.AnimationType
 import com.nhaarman.supertooltips.ToolTip
-import com.nhaarman.supertooltips.ToolTipRelativeLayout
+import com.nhaarman.supertooltips.ToolTipContainer
 import com.nhaarman.supertooltips.ToolTipView
 
 class MainActivity : Activity(), View.OnClickListener, ToolTipView.OnToolTipViewClickedListener {
@@ -17,13 +18,13 @@ class MainActivity : Activity(), View.OnClickListener, ToolTipView.OnToolTipView
     private var mBlueToolTipView: ToolTipView? = null
     private var mPurpleToolTipView: ToolTipView? = null
     private var mOrangeToolTipView: ToolTipView? = null
-    private lateinit var mToolTipFrameLayout: ToolTipRelativeLayout
+    private lateinit var mToolTipFrameLayout: ToolTipContainer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mToolTipFrameLayout = findViewById<View>(R.id.activity_main_tooltipframelayout) as ToolTipRelativeLayout
+        mToolTipFrameLayout = findViewById<View>(R.id.activity_main_tooltipframelayout) as ToolTipContainer
         findViewById<View>(R.id.activity_main_redtv).setOnClickListener(this)
         findViewById<View>(R.id.activity_main_greentv).setOnClickListener(this)
         findViewById<View>(R.id.activity_main_bluetv).setOnClickListener(this)
@@ -31,6 +32,11 @@ class MainActivity : Activity(), View.OnClickListener, ToolTipView.OnToolTipView
         findViewById<View>(R.id.activity_main_orangetv).setOnClickListener(this)
 
         findViewById<View>(R.id.container).doOnPreDraw {
+            it as ViewGroup
+            //we use an zero width ToolTipContainer so we set clipChildren = false to
+            //let it draw outside of it parent, if you use a container full file the screen, you don't
+            //need this, this is just for demonstration
+            it.clipChildren = false
             addRedToolTipView()
             addGreenToolTipView()
             addOrangeToolTipView()

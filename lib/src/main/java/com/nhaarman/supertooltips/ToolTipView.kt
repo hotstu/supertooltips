@@ -134,9 +134,9 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
         val relativeMasterViewCenterX = mRelativeMasterViewX + masterViewWidth / 2
 
         val toolTipViewAboveY = mRelativeMasterViewY - height
-        val toolTipViewBelowY = Math.max(0, mRelativeMasterViewY + masterViewHeight)
+        val toolTipViewBelowY = max(0, mRelativeMasterViewY + masterViewHeight)
 
-        var toolTipViewX = Math.max(0, relativeMasterViewCenterX - width / 2)
+        var toolTipViewX = max(0, relativeMasterViewCenterX - width / 2)
         if (toolTipViewX + width > viewDisplayFrame.right) {
             toolTipViewX = viewDisplayFrame.right - width
         }
