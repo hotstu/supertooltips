@@ -1,5 +1,17 @@
-SuperToolTips (Discontinued)
+SuperToolTips (reborned)
 ===========
+### why this fork(hotstu/supertooltips)?
+the origin one is five years old and discontinued with bug left & old school dependencies 
+### what's new in this fork(hotstu/supertooltips)↓↓↓
+* Rewrite in kotlin
+* bug fix
+* better performance (by reducing depth of view tree )
+* target api 28
+* no need  nineoldandroid library
+* kotlin friendly api
+
+### the origin message:
+===============================
 [Play Store Demo][1] [![Build Status](https://travis-ci.org/nhaarman/supertooltips.svg?branch=master)](https://travis-ci.org/nhaarman/supertooltips)
 
 *This project has been abandoned. Feel free to fork this project, though no support will be given.*
