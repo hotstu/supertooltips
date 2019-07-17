@@ -33,8 +33,8 @@ class MainActivity : Activity(), View.OnClickListener, ToolTipView.OnToolTipView
 
         findViewById<View>(R.id.container).doOnPreDraw {
             it as ViewGroup
-            //we use an zero width ToolTipContainer so we set clipChildren = false to
-            //let it draw outside of it parent, if you use a container full file the screen, you don't
+            //we use an zero szie ToolTipContainer so we set clipChildren = false to
+            //let it draw outside of it parent, if you use a container full fill the screen, you don't
             //need this, this is just for demonstration
             it.clipChildren = false
             addRedToolTipView()

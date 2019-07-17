@@ -21,6 +21,9 @@ import android.view.View
 import android.view.View.MeasureSpec.UNSPECIFIED
 import android.widget.FrameLayout
 
+/**
+ * this class is not necessary, you can have your own ViewGroup then just add ToolTipView as child
+ */
 class ToolTipContainer : FrameLayout {
 
     constructor(context: Context) : super(context)
