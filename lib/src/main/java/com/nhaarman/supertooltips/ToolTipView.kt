@@ -16,7 +16,6 @@
 package com.nhaarman.supertooltips
 
 import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
@@ -25,12 +24,12 @@ import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.animation.doOnEnd
 import androidx.core.view.doOnPreDraw
-import java.util.*
+import java.lang.ref.WeakReference
 import kotlin.math.max
 
 /**
@@ -47,7 +46,7 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
     private lateinit var mShadowView: View
     private lateinit var mContentHolder: ViewGroup
 
-    private var mView: View? = null
+    private var mView: WeakReference<View>? = null
 
     private var mRelativeMasterViewY: Int = 0
 
@@ -80,7 +79,7 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
 
 
     fun setToolTip(toolTip: ToolTip, view: View) {
-        mView = view
+        mView = WeakReference(view)
 
         mToolTipTV.text = toolTip.text
 
@@ -115,17 +114,18 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
     }
 
     private fun applyToolTipPosition() {
+        val v = mView?.get() ?: return
         val masterViewScreenPosition = IntArray(2)
-        mView!!.getLocationOnScreen(masterViewScreenPosition)
+        v.getLocationOnScreen(masterViewScreenPosition)
 
         val viewDisplayFrame = Rect()
-        mView!!.getWindowVisibleDisplayFrame(viewDisplayFrame)
+        v.getWindowVisibleDisplayFrame(viewDisplayFrame)
 
         val parentViewScreenPosition = IntArray(2)
         (parent as View).getLocationOnScreen(parentViewScreenPosition)
 
-        val masterViewWidth = mView!!.width
-        val masterViewHeight = mView!!.height
+        val masterViewWidth = v.width
+        val masterViewHeight = v.height
 
         mRelativeMasterViewX = masterViewScreenPosition[0] - parentViewScreenPosition[0]
         mRelativeMasterViewY = masterViewScreenPosition[1] - parentViewScreenPosition[1]
@@ -157,27 +157,30 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
         }
 
         if (animationType == AnimationType.NONE) {
-
             translationY = toolTipViewY.toFloat()
             translationX = toolTipViewX.toFloat()
         } else {
-            val animators = ArrayList<Animator>(5)
 
-            if (animationType == AnimationType.FROM_MASTER_VIEW) {
-                animators.add(ObjectAnimator.ofFloat(this, TRANSLATION_Y_COMPAT, mRelativeMasterViewY + mView!!.height / 2f - height / 2f, toolTipViewY.toFloat()))
-                animators.add(ObjectAnimator.ofFloat(this, TRANSLATION_X_COMPAT, mRelativeMasterViewX + mView!!.width / 2f - width / 2f, toolTipViewX.toFloat()))
-            } else if (animationType == AnimationType.FROM_TOP) {
-                animators.add(ObjectAnimator.ofFloat(this, TRANSLATION_Y_COMPAT, 0f, toolTipViewY.toFloat()))
-            }
 
-            animators.add(ObjectAnimator.ofFloat(this, SCALE_X_COMPAT, 0f, 1f))
-            animators.add(ObjectAnimator.ofFloat(this, SCALE_Y_COMPAT, 0f, 1f))
+            AnimatorSet().apply {
+                playTogether(arrayListOf(
+                        ObjectAnimator.ofFloat(this@ToolTipView, SCALE_X_COMPAT, 0f, 1f) as Animator,
+                        ObjectAnimator.ofFloat(this@ToolTipView, SCALE_Y_COMPAT, 0f, 1f) as Animator,
+                        ObjectAnimator.ofFloat(this@ToolTipView, ALPHA_COMPAT, 0f, 1f) as Animator
+                ).apply {
+                    if (animationType == AnimationType.FROM_MASTER_VIEW) {
+                        add(ObjectAnimator.ofFloat(this@ToolTipView, TRANSLATION_Y_COMPAT,
+                                mRelativeMasterViewY + v.height / 2f - height / 2f, toolTipViewY.toFloat()))
+                        add(ObjectAnimator.ofFloat(this@ToolTipView, TRANSLATION_X_COMPAT,
+                                mRelativeMasterViewX + v.width / 2f - width / 2f, toolTipViewX.toFloat()))
+                    } else if (animationType == AnimationType.FROM_TOP) {
+                        add(ObjectAnimator.ofFloat(this@ToolTipView, TRANSLATION_Y_COMPAT,
+                                0f, toolTipViewY.toFloat()))
+                    }
+                })
+            }.start()
 
-            animators.add(ObjectAnimator.ofFloat(this, ALPHA_COMPAT, 0f, 1f))
 
-            val animatorSet = AnimatorSet()
-            animatorSet.playTogether(animators)
-            animatorSet.start()
         }
     }
 
@@ -206,37 +209,38 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
     }
 
     fun remove() {
-
         if (animationType == AnimationType.NONE) {
-            if (parent != null) {
-                (parent as ViewManager).removeView(this)
+            parent?.run {
+                this as ViewGroup
+                this.removeView(this@ToolTipView)
             }
         } else {
-            val animators = ArrayList<Animator>(5)
-            if (animationType == AnimationType.FROM_MASTER_VIEW) {
-                animators.add(ObjectAnimator.ofFloat(this, TRANSLATION_Y_COMPAT, y, mRelativeMasterViewY + mView!!.height / 2f - height / 2f))
-                animators.add(ObjectAnimator.ofFloat(this, TRANSLATION_X_COMPAT, x, mRelativeMasterViewX + mView!!.width / 2f - width / 2f))
-            } else {
-                animators.add(ObjectAnimator.ofFloat(this, TRANSLATION_Y_COMPAT, y, 0f))
-            }
-
-            animators.add(ObjectAnimator.ofFloat(this, SCALE_X_COMPAT, 1f, 0f))
-            animators.add(ObjectAnimator.ofFloat(this, SCALE_Y_COMPAT, 1f, 0f))
-
-            animators.add(ObjectAnimator.ofFloat(this, ALPHA_COMPAT, 1f, 0f))
-            val animatorSet = AnimatorSet()
-            animatorSet.playTogether(animators)
-            animatorSet.addListener(DisappearanceAnimatorListener())
-            animatorSet.start()
+            AnimatorSet().apply {
+                playTogether(arrayListOf(
+                        ObjectAnimator.ofFloat(this@ToolTipView, SCALE_X_COMPAT, 1f, 0f),
+                        ObjectAnimator.ofFloat(this@ToolTipView, SCALE_Y_COMPAT, 1f, 0f),
+                        ObjectAnimator.ofFloat(this@ToolTipView, ALPHA_COMPAT, 1f, 0f)
+                ).apply {
+                    if (animationType == AnimationType.FROM_MASTER_VIEW) {
+                        add(ObjectAnimator.ofFloat(this@ToolTipView, TRANSLATION_Y_COMPAT, y))
+                        add(ObjectAnimator.ofFloat(this@ToolTipView, TRANSLATION_X_COMPAT, x))
+                    } else {
+                        add(ObjectAnimator.ofFloat(this@ToolTipView, TRANSLATION_Y_COMPAT, y, 0f))
+                    }
+                }.toList())
+                doOnEnd {
+                    parent?.run {
+                        this as ViewGroup
+                        this.removeView(this@ToolTipView)
+                    }
+                }
+            }.start()
         }
     }
 
     override fun onClick(view: View) {
+        mListener?.onToolTipViewClicked(this)
         remove()
-
-        if (mListener != null) {
-            mListener!!.onToolTipViewClicked(this)
-        }
     }
 
 
@@ -244,21 +248,6 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
         fun onToolTipViewClicked(toolTipView: ToolTipView)
     }
 
-
-    private inner class DisappearanceAnimatorListener : AnimatorListenerAdapter() {
-
-        override fun onAnimationStart(animation: Animator) {}
-
-        override fun onAnimationEnd(animation: Animator) {
-            if (parent != null) {
-                (parent as ViewManager).removeView(this@ToolTipView)
-            }
-        }
-
-        override fun onAnimationCancel(animation: Animator) {}
-
-        override fun onAnimationRepeat(animation: Animator) {}
-    }
 
     companion object {
 
