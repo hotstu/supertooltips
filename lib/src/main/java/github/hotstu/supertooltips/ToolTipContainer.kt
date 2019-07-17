@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.nhaarman.supertooltips
+package github.hotstu.supertooltips
 
 import android.content.Context
 import android.util.AttributeSet

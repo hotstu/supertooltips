@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
-import com.nhaarman.supertooltips.AnimationType
-import com.nhaarman.supertooltips.ToolTip
-import com.nhaarman.supertooltips.ToolTipContainer
-import com.nhaarman.supertooltips.ToolTipView
+import github.hotstu.supertooltips.AnimationType
+import github.hotstu.supertooltips.ToolTip
+import github.hotstu.supertooltips.ToolTipContainer
+import github.hotstu.supertooltips.ToolTipView
 
 class MainActivity : Activity(), View.OnClickListener, ToolTipView.OnToolTipViewClickedListener {
 

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.nhaarman.supertooltips
+package github.hotstu.supertooltips
 
 import android.animation.Animator
 import android.animation.AnimatorSet
