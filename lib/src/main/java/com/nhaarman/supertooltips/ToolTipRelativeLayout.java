@@ -15,7 +15,6 @@
 
 package com.nhaarman.supertooltips;
 
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -24,10 +23,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
-import com.nhaarman.supertooltips.exception.NoOverflowMenuRuntimeException;
-import com.nhaarman.supertooltips.exception.NoTitleViewRuntimeException;
-import com.nhaarman.supertooltips.exception.ViewNotFoundRuntimeException;
 
 public class ToolTipRelativeLayout extends RelativeLayout {
 
@@ -72,8 +67,8 @@ public class ToolTipRelativeLayout extends RelativeLayout {
      * **EXPERIMENTAL**</p> Shows a {@link ToolTipView} based on given
      * {@link ToolTip} at the proper location relative to the {@link View} with
      * given resource id.</p>NOTE: This method will throw a
-     * {@link ViewNotFoundRuntimeException} if the View is not found. You can
-     * choose to ignore this by catching the ViewNotFoundRuntimeException.
+     * Exception if the View is not found. You can
+     * choose to ignore this by catching the Exception.
      *
      * @param activity
      *            the Activity which holds the ActionBar.
@@ -90,7 +85,7 @@ public class ToolTipRelativeLayout extends RelativeLayout {
         final View view = decorView.findViewById(resId);
 
         if (view == null) {
-            throw new ViewNotFoundRuntimeException();
+            throw new IllegalArgumentException("view == null");
         }
 
         toolTipView.setToolTip(toolTip, view);
@@ -109,7 +104,6 @@ public class ToolTipRelativeLayout extends RelativeLayout {
      *            the ToolTip to show.
      * @return the ToolTipView that was created.
      */
-    @TargetApi(11)
     public ToolTipView showToolTipForActionBarHome(final Activity activity, final ToolTip toolTip) {
         final int homeResId = android.R.id.home;
         return showToolTipForViewResId(activity, toolTip, homeResId);
@@ -120,9 +114,9 @@ public class ToolTipRelativeLayout extends RelativeLayout {
      *
      * Shows a {@link ToolTipView} based on given {@link ToolTip} at the proper
      * location relative to the {@link ActionBar} title {@link View}.</p>NOTE:
-     * This method will throw a {@link NoTitleViewRuntimeException} if the title
+     * This method will throw Exception if the title
      * View is not found. You can choose to ignore this by catching the
-     * NoTitleViewRuntimeException.</p>NOTE: This method uses an internal API to
+     * Exception.</p>NOTE: This method uses an internal API to
      * find the View. It MAY cause your application to crash in future Android
      * versions.
      *
@@ -132,11 +126,10 @@ public class ToolTipRelativeLayout extends RelativeLayout {
      *            the ToolTip to show.
      * @return the ToolTipView that was created.
      */
-    @TargetApi(11)
     public ToolTipView showToolTipForActionBarTitle(final Activity activity, final ToolTip toolTip) {
         final int titleResId = Resources.getSystem().getIdentifier(ACTION_BAR_TITLE, ID, ANDROID);
         if (titleResId == 0) {
-            throw new NoTitleViewRuntimeException();
+            throw new IllegalArgumentException("titleResId == 0");
         }
         return showToolTipForViewResId(activity, toolTip, titleResId);
     }
@@ -145,10 +138,10 @@ public class ToolTipRelativeLayout extends RelativeLayout {
      * **EXPERIMENTAL**</p> Shows a {@link ToolTipView} based on given
      * {@link ToolTip} at the proper location relative to the overflow menu
      * button.</p>NOTE: This method will throw a
-     * {@link NoOverflowMenuRuntimeException} if the overflow menu is not found.
+     * Exception if the overflow menu is not found.
      * This happens when there simply is no overflow menu button, or the menu
      * isn't initialised yet. You can choose to ignore this by catching the
-     * NoOverflowMenuRuntimeException.</p>NOTE: This method uses an internal API
+     * Exception.</p>NOTE: This method uses an internal API
      * to find the View. It MAY cause your application to crash in future
      * Android versions.
      *
@@ -158,12 +151,10 @@ public class ToolTipRelativeLayout extends RelativeLayout {
      *            the ToolTip to show.
      * @return the ToolTipView that was created.
      */
-    @TargetApi(11)
     public ToolTipView showToolTipForActionBarOverflowMenu(final Activity activity, final ToolTip toolTip) {
         return showToolTipForView(toolTip, findActionBarOverflowMenuView(activity));
     }
 
-    @TargetApi(11)
     private static View findActionBarOverflowMenuView(final Activity activity) {
         final ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
 
@@ -179,7 +170,7 @@ public class ToolTipRelativeLayout extends RelativeLayout {
         }
 
         if (actionMenuView == null) {
-            throw new NoOverflowMenuRuntimeException();
+            throw new IllegalArgumentException("actionMenuView == null");
         }
 
         int actionMenuChildCount = actionMenuView.getChildCount();
@@ -191,7 +182,7 @@ public class ToolTipRelativeLayout extends RelativeLayout {
         }
 
         if (overflowMenuButton == null) {
-            throw new NoOverflowMenuRuntimeException();
+            throw new IllegalArgumentException("overflowMenuButton == null");
         }
 
         return overflowMenuButton;

@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <FrameLayout
-        android:id="@+id/tooltip_topframe"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/tooltip_top_frame"
-        android:layout_marginTop="10dp" />
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/tooltip_pointer_up"
@@ -19,12 +12,19 @@
         android:src="@drawable/tooltip_arrow_up" />
 
     <FrameLayout
+        android:id="@+id/tooltip_topframe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tooltip_top_frame"
+        tools:backgroundTint="#ddd" />
+
+    <FrameLayout
         android:id="@+id/tooltip_contentholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
         android:layout_below="@id/tooltip_topframe"
         android:layout_marginTop="-2dp"
+        android:background="#ffffff"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:scrollbars="none">
@@ -32,31 +32,30 @@
         <TextView
             android:id="@+id/tooltip_contenttv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:text="content" />
     </FrameLayout>
 
-    <View
-        android:id="@+id/tooltip_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@drawable/quickcontact_drop_shadow"
-        android:layout_below="@id/tooltip_contentholder"
-        android:layout_marginTop="-6dp" />
 
     <FrameLayout
         android:id="@+id/tooltip_bottomframe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/tooltip_bottom_frame"
-        android:layout_below="@id/tooltip_contentholder" />
+        android:background="@drawable/tooltip_bottom_frame" />
 
     <ImageView
         android:id="@+id/tooltip_pointer_down"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tooltip_bottomframe"
         android:layout_marginTop="-1dp"
         android:src="@drawable/tooltip_arrow_down" />
 
+    <View
+        android:id="@+id/tooltip_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/tooltip_contentholder"
+        android:layout_marginTop="-6dp"
+        android:background="@drawable/quickcontact_drop_shadow" />
 
-</RelativeLayout>
+</merge>
