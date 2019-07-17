@@ -1,3 +1,5 @@
+[![author](https://img.shields.io/badge/author-hglf-blue.svg)](https://github.com/hotstu) [ ![Download](https://api.bintray.com/packages/hglf/maven/supertooltips/images/download.svg) ](https://bintray.com/hglf/maven/supertooltips/_latestVersion) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 SuperToolTips (reborned)
 ===========
 ### why this fork(hotstu/supertooltips)?
