@@ -20,6 +20,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 
+@Deprecated("no need any more")
 class ToolTipRelativeLayout : FrameLayout {
 
     constructor(context: Context) : super(context) {}
@@ -40,8 +41,7 @@ class ToolTipRelativeLayout : FrameLayout {
      * @return the ToolTipView that was created.
      */
     fun showToolTipForView(toolTip: ToolTip, view: View): ToolTipView {
-        val toolTipView = ToolTipView(context)
-        toolTipView.setToolTip(toolTip, view)
+        val toolTipView = ToolTipView.showToolTipForView(toolTip, view)
         addView(toolTipView)
         return toolTipView
     }

@@ -109,7 +109,6 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
         doOnPreDraw {
             applyToolTipPosition()
         }
-        postInvalidate()
 
     }
 
@@ -256,5 +255,22 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
         val SCALE_X_COMPAT = "scaleX"
         val SCALE_Y_COMPAT = "scaleY"
         val ALPHA_COMPAT = "alpha"
+
+        /**
+         * Shows a [ToolTipView] based on given [ToolTip] at the proper
+         * location relative to given [View].
+         *
+         * @param toolTip
+         * the ToolTip to show.
+         * @param view
+         * the View to position the ToolTipView relative to.
+         *
+         * @return the ToolTipView that was created.
+         */
+        fun showToolTipForView(toolTip: ToolTip, view: View): ToolTipView {
+            val toolTipView = ToolTipView(view.context)
+            toolTipView.setToolTip(toolTip, view)
+            return toolTipView
+        }
     }
 }
