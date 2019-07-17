@@ -29,11 +29,6 @@
         android:paddingRight="8dp"
         android:scrollbars="none">
 
-        <TextView
-            android:id="@+id/tooltip_contenttv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="content" />
     </FrameLayout>
 
 

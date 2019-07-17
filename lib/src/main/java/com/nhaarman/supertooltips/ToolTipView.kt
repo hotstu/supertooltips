@@ -40,7 +40,6 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
 
     private lateinit var mTopPointerView: ImageView
     private lateinit var mTopFrame: View
-    private lateinit var mToolTipTV: TextView
     private lateinit var mBottomFrame: View
     private lateinit var mBottomPointerView: ImageView
     private lateinit var mShadowView: View
@@ -69,7 +68,6 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
         mTopPointerView = findViewById<View>(R.id.tooltip_pointer_up) as ImageView
         mTopFrame = findViewById(R.id.tooltip_topframe)
         mContentHolder = findViewById<View>(R.id.tooltip_contentholder) as ViewGroup
-        mToolTipTV = findViewById<View>(R.id.tooltip_contenttv) as TextView
         mBottomFrame = findViewById(R.id.tooltip_bottomframe)
         mBottomPointerView = findViewById<View>(R.id.tooltip_pointer_down) as ImageView
         mShadowView = findViewById(R.id.tooltip_shadow)
@@ -81,17 +79,9 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
     fun setToolTip(toolTip: ToolTip, view: View) {
         mView = WeakReference(view)
 
-        mToolTipTV.text = toolTip.text
 
         animationType = toolTip.animationType
 
-        if (toolTip.typeface != null) {
-            mToolTipTV.typeface = toolTip.typeface
-        }
-
-        if (toolTip.textColor != 0) {
-            mToolTipTV.setTextColor(toolTip.textColor)
-        }
 
         if (toolTip.color != 0) {
             setColor(toolTip.color)
@@ -99,6 +89,19 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
 
         if (toolTip.contentViewId != 0) {
             setContentView(toolTip.contentViewId)
+        } else {
+            val mToolTipTV = TextView(context)
+
+            mToolTipTV.text = toolTip.text
+
+            if (toolTip.typeface != null) {
+                mToolTipTV.typeface = toolTip.typeface
+            }
+
+            if (toolTip.textColor != 0) {
+                mToolTipTV.setTextColor(toolTip.textColor)
+            }
+            setContentView(mToolTipTV)
         }
 
         if (!toolTip.showShadow) {
@@ -207,6 +210,11 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
         LayoutInflater.from(context).inflate(viewId, mContentHolder, true)
     }
 
+    private fun setContentView(view: View) {
+        mContentHolder.removeAllViews()
+        mContentHolder.addView(view)
+    }
+
     fun remove() {
         if (animationType == AnimationType.NONE) {
             parent?.run {
@@ -250,11 +258,11 @@ class ToolTipView(context: Context) : LinearLayout(context), View.OnClickListene
 
     companion object {
 
-        val TRANSLATION_Y_COMPAT = "translationY"
-        val TRANSLATION_X_COMPAT = "translationX"
-        val SCALE_X_COMPAT = "scaleX"
-        val SCALE_Y_COMPAT = "scaleY"
-        val ALPHA_COMPAT = "alpha"
+        const val TRANSLATION_Y_COMPAT = "translationY"
+        const val TRANSLATION_X_COMPAT = "translationX"
+        const val SCALE_X_COMPAT = "scaleX"
+        const val SCALE_Y_COMPAT = "scaleY"
+        const val ALPHA_COMPAT = "alpha"
 
         /**
          * Shows a [ToolTipView] based on given [ToolTip] at the proper
