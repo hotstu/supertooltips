@@ -10,11 +10,8 @@ the origin one is five years old and discontinued with bug left & old school dep
 * no need  nineoldandroid library
 * kotlin friendly api
 
-### the origin message:
-===============================
-[Play Store Demo][1] [![Build Status](https://travis-ci.org/nhaarman/supertooltips.svg?branch=master)](https://travis-ci.org/nhaarman/supertooltips)
+=======================
 
-*This project has been abandoned. Feel free to fork this project, though no support will be given.*
 
 SuperToolTips is an Open Source Android library that allows developers to easily create Tool Tips for views.
 Feel free to use it all you want in your Android apps provided that you cite this project and include the license in your app.
@@ -28,19 +25,20 @@ Add the following to your `build.gradle`:
 
 ```groovy
 dependencies {
-    compile 'com.nhaarman.supertooltips:library:3.0.+'
+    implemention 'github.hotstu.supertooltips:lib:1.0.0'
 }
 
 ```
 Usage
 -----
 
-* In your layout xml file, add the `ToolTipRelativeLayout` (`com.nhaarman.supertooltips.ToolTipRelativeLayout`) with height and width of `match_parent`. Make sure this view is on top!
+* (optional) In your layout xml file, add the `ToolTipRelativeLayout` (`com.nhaarman.supertooltips.ToolTipRelativeLayout`) with height and width of `match_parent`. Make sure this view is on top!
 * Find the `ToolTipRelativeLayout` in your code, and start adding `ToolTips`!
 
 Example:
 -----
-```java
+
+```xml
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
@@ -52,26 +50,24 @@ Example:
 	    android:layout_height="wrap_content"
 	    android:layout_centerInParent="true" />
 
-	<com.nhaarman.supertooltips.ToolTipRelativeLayout
+	<github.hotstu.supertooltips.ToolTipContainer
 		android:id="@+id/activity_main_tooltipRelativeLayout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent" />
 </RelativeLayout>
+```
 
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.activity_main);
-	
-	ToolTipRelativeLayout toolTipRelativeLayout = (ToolTipRelativeLayout) findViewById(R.id.activity_main_tooltipRelativeLayout);
-		
-	ToolTip toolTip = new ToolTip()
-	                    .withText("A beautiful View")
-	                    .withColor(Color.RED)
-	                    .withShadow()
-						.withAnimationType(ToolTip.ANIMATIONTYPE_FROMTOP);
-	myToolTipView = toolTipRelativeLayout.showToolTipForView(toolTip, findViewById(R.id.activity_main_redtv));
-	myToolTipView.setOnToolTipViewClickedListener(MainActivity.this);
+```kotlin
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+	mToolTipFrameLayout = findViewById<View>(R.id.activity_main_tooltipframelayout) as ToolTipContainer
+    val toolTip = ToolTip().apply {
+        text = ("Moarrrr buttons!")
+        color = (resources.getColor(R.color.holo_blue))
+        animationType = (AnimationType.FROM_TOP)
+    }
+    mToolTipFrameLayout.showToolTipForView(toolTip, findViewById(R.id.activity_main_bluetv))		
 }
 ```
 	
@@ -88,25 +84,6 @@ You can customize the `ToolTip` in several ways:
 
 See the examples.
 
-Developed By
------
-* Niek Haarman
 
-License
------
 
-	Copyright 2013 Niek Haarman
 
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-	http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-
- [1]: https://play.google.com/store/apps/details?id=com.haarman.supertooltips
